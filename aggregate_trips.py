@@ -40,7 +40,7 @@ def main(input_data):
     df_citibikes = df_citibikes.groupby(["end_lat", "end_lon"]).mean().reset_index()
 
     # Reformat and return
-    for col in ["start_lat", "start_lon", "end_lat", "end_lon"]:
+    for col in ["end_lat", "end_lon"]:
         df_citibikes[col] = df_citibikes[col].map(lambda x: round(x, 3))
         
     df_citibikes = df_citibikes.rename(
