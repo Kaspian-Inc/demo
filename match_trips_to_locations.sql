@@ -1,8 +1,8 @@
 select
-  starbucks.store_name,
+  s.store_name,
   current_timestamp experiment_time,
-  citibikes.avg_distance,
-  citibikes.avg_duration
+  c.avg_distance,
+  c.avg_duration
 from citibikes c
 join starbucks s
 where 1=1
