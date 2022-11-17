@@ -49,6 +49,6 @@ def main(input_data):
         }
     )
     return {
-        'data': {'citibikes': df},
+        'data': {'citibikes': df_citibikes},
         'metadata': metadata,
     }
