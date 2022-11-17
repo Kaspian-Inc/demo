@@ -20,7 +20,7 @@ def haversine(lon1, lat1, lon2, lat2):
     return c * r
 
 
-def main(input_data):
+def main(input_data, metadata=metadata):
 
     # Extract dataframe
     df_citibikes = input_data["df_citibikes"]
