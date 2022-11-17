@@ -48,4 +48,7 @@ def main(input_data):
             "distance": "avg_distance"
         }
     )
-    return df_citibikes
+    return {
+        'data': {'citibikes': df},
+        'metadata': metadata,
+    }
