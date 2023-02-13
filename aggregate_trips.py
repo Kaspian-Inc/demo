@@ -1,6 +1,7 @@
 # Aggregate Citibike Trips
 
 from math import radians, cos, sin, asin, sqrt
+from time import sleep
 
 # From https://stackoverflow.com/questions/15736995/how-can-i-quickly-estimate-the-distance-between-two-latitude-longitude-points
 def haversine(lon1, lat1, lon2, lat2):
@@ -21,33 +22,35 @@ def haversine(lon1, lat1, lon2, lat2):
 
 
 def main(input_data, metadata):
+    for _ in range(5):
+        # Extract dataframe
+        df_citibikes = input_data["df_citibikes"]
+    
+        # Compute trip distance
+        df_citibikes["distance"] = df_citibikes.apply(
+            lambda row: haversine(
+                row["start_lon"],
+                row["start_lat"],
+                row["end_lon"],
+                row["end_lat"],
+            ), axis=1
+        )
+    
+        # Aggregate
+        df_citibikes = df_citibikes.drop(["start_lat", "start_lon"], axis=1)
+        df_citibikes = df_citibikes.groupby(["end_lat", "end_lon"]).mean().reset_index()
+    
+        # Reformat and return
+        df_citibikes = df_citibikes.rename(
+            columns={
+                "end_lat": "lat",
+                "end_lon": "lon",
+                "duration": "avg_duration",
+                "distance": "avg_distance"
+            }
+        )
+        sleep(60)
 
-    # Extract dataframe
-    df_citibikes = input_data["df_citibikes"]
-
-    # Compute trip distance
-    df_citibikes["distance"] = df_citibikes.apply(
-        lambda row: haversine(
-            row["start_lon"],
-            row["start_lat"],
-            row["end_lon"],
-            row["end_lat"],
-        ), axis=1
-    )
-
-    # Aggregate
-    df_citibikes = df_citibikes.drop(["start_lat", "start_lon"], axis=1)
-    df_citibikes = df_citibikes.groupby(["end_lat", "end_lon"]).mean().reset_index()
-
-    # Reformat and return
-    df_citibikes = df_citibikes.rename(
-        columns={
-            "end_lat": "lat",
-            "end_lon": "lon",
-            "duration": "avg_duration",
-            "distance": "avg_distance"
-        }
-    )
     return {
         'data': {'citibikes': df_citibikes},
         'metadata': metadata,
